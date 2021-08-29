@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link id="favicon" rel="shortcut icon" type="image/ico" href="static/assets/icon/rocket.ico">
+        <link rel="stylesheet" href="static/assets/css/style.css">
+        <title>{{ bottle['title'] or 'Landing Page' }}</title>
+    </head>
+    <body>
+        <div class="head">
+            <div class="weatherforcastbox">
+                <span style="font-style: italic;">
+                    Bottle: {{ bottle['version'] }}, SQLite3: {{ db['version'] }} 
+                    <br>
+                    Its a beautifull day!
+                </span>
+            </div>
+            <a title="Reload page" href="/">
+                <header>
+                    News Paper
+                </header>
+            </a>
+            <div class="subhead">
+                <span id="datetime"></span> - Db stats - Table rows: {{ db['totalrows'] }} - Using {{ db['dbsize'] }} - Available   {{ db['disksize'] }}
+            </div>
+        </div>
+
+    %if bottle['message']:
+        <div class="messagebox" id="messagebox" style="display: block;">
+            <div class="collumn">
+                <span class="headline hl1">Breaking News</span>
+                <span class="headline hl4">This just happend...</span>
+                <div class="spacing">{{ bottle['message'] }}</div>
+                <div class="spacing">
+                    <button class="button subhead" type="button" onclick="showhide('messagebox')" autofocus>Noticed</button>
+                </div>
+            </div>
+        </div>
+    %end
+
+        <div class="messagebox" id="addbox" style="display: none;">
+            <div class="collumn">
+                <span class="headline hl1">Add</span>
+                <span class="headline hl4">Enter a value in the box below</span>
+                <form method="POST" action="{{ bottle['baseurl'] }}">
+                    <div class="spacing">
+                        <label >Timestamp will be added</label>
+                        <input type="text" id="inputbox" name="value" placeholder="Example">
+                    </div>
+                    <div class="spacing">
+                        <button class="button subhead" type="submit">Add row</button>
+                        <button class="button subhead" type="button" onclick="showhide('addbox')">Discard</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="messagebox" id="editbox" style="display: none;">
+            <div class="collumn">
+                <span class="headline hl1">Edit</span>
+                <span class="headline hl4" id="id">Edit values in the texboxes below</span>
+                <form method="POST" action="{{ bottle['baseurl'] }}" id="editform" >
+
+                %for column in db["columns"]:
+                    <div class="spacing">
+                        <input type="text" id="{{ 'input_' + column }}" name="{{ column }}" value="">
+                    </div>
+                %end
+                    
+                    <div class="spacing">
+                        <button class="button subhead" type="submit">Save</button>
+                        <button class="button subhead" type="button" onclick="showhide('editbox')">Never mind</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="table">
+            <div class="collumn">
+                <span class="headline hl1">Project update!</span>
+                <span class="headline hl4">A table "{{ db["table"] }}" with values</span>
+                <table class="js-sort-table">
+                    <thead>
+                        <tr>
+                            <td id="id">id  &#11139;</td>
+
+                            %for column in db["columns"]:
+                                <td id="{{ column }}"> {{ column }} </td>
+                            %end
+
+                            <td colspan="2">Actions</td>
+                        </tr>
+                    </thead>
+                        %for value in values:
+                            <tr id="{{ 'rowid_' + str( value[0] ) }}">
+                                <td>{{ value[0] }}</td>
+                                <td id="{{ db['columns'][0] }}">{{ value[1] }}</td>
+                                <td id="{{ db['columns'][1] }}">{{ value[2] }}</td>
+                                <td>
+                                    <button class="button subhead" type="button" onclick="makeOrder('{{ "rowid_" + str( value[0] ) }}')">Edit</button>
+                                <td>
+                                    <form action="{{ bottle['baseurl'] }}delete/{{ value[0] }}" method="POST">
+                                        <input class="button subhead" type="submit" value="Delete"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        %end
+                </table>
+                <div class="spacing">
+                    <center><button class="button subhead" type="button" onclick="showhide('addbox')">Add row</button></center>
+                </div>
+            </div>
+        </div>
+        
+    </body>
+    <script>
+        var dt = new Date();
+        document.getElementById("datetime").innerHTML = 
+            dt.toLocaleString('default', { weekday: 'long' })
+            +" "+ 
+            ("0"+(dt.getMonth()+1)).slice(-2)
+            +" "+ 
+            dt.toLocaleString('default', { month: 'long' })
+            +", " +
+            dt.getFullYear()
+            +" - "+ 
+            (("0"+dt.getHours()).slice(-2)) +":"+ (("0"+dt.getMinutes()).slice(-2));
+
+        function showhide(id) {
+            let e = document.getElementById(id);
+            e.style.display = (e.style.display == 'none') ? 'block' : 'none';
+            if (id == 'addbox') {
+                document.getElementById("inputbox").focus();
+                document.getElementById("inputbox").value = "";
+            };
+        }
+
+        function makeOrder(rowId) {
+            let row = document.getElementById(rowId);
+            let editbox = document.getElementById("editbox");
+            let editform = document.getElementById("editform");
+            editform.action = editform.editform + rowId.toLocaleString()
+
+        %for column in db["columns"]:
+            let {{ column }} = row ? row.querySelector('#{{ column }}') : null;
+            let {{ "input_" + column }} = editbox ? editbox.querySelector("#{{ 'input_' + column }}") : null;
+            {{"input_" + column }}.value = {{ column }}.textContent;
+        %end
+
+            // first show the div and then focus on the inputbox
+            showhide('editbox');
+            document.getElementById("{{ 'input_' + db['columns'][0] }}").focus();
+        }
+
+    </script>
+    <script src="static/assets/js/sort-table.min.js"></script> 
+</html>

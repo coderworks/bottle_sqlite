@@ -1,0 +1,203 @@
+/* Old Newspaper Style from codepen*/
+
+@font-face {
+    font-family: 'Playfair Display';
+    src: url(../font/playfair-display-v22-latin-900.woff2);
+}
+
+body {
+    background-color: #f9f7f1;
+    color: #2f2f2f;
+    font-family: serif;
+    font-size: 14px;
+}
+
+header {
+    color: #2f2f2f;
+    display: inline-block;
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    font-weight: 900;
+    line-height: 72px;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.weatherforcastbox {
+    border: 3px double #2f2f2f;
+    display: inline-block;
+    position: relative;
+    left: 10px;
+    line-height: 20px;
+    margin: 0 50px 20px -360px;
+    padding: 10px 15px 10px 15px;
+    width: 12%;
+}
+
+@media only all and (max-width: 1300px) {
+    .weatherforcastbox {
+        display: none;
+    }
+}
+
+.head {
+    position: relative;
+    text-align: center;
+}
+
+.subhead {
+    border-bottom: 2px solid #2f2f2f;
+    border-top: 2px solid #2f2f2f;
+    padding: 12px 0 12px 0;
+    text-transform: uppercase;
+}
+
+.collumn {
+    padding: 0 5px 0 5px;
+    height: 100%;
+    text-align: center;
+}
+
+.collumn .headline {
+    display: block;
+    font-family: 'Playfair Display';
+}
+
+.collumn .headline.hl1 {
+    font-size: 30px;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+.collumn .headline.hl4 {
+    font-size: 12px;
+    font-weight: 700;
+    padding: 10px 0 10px 0;
+}
+
+.collumn .headline.hl4:before {
+    border-top: 1px solid #2f2f2f;
+    content: '';
+    display: block;
+    height: 7px;
+    margin: 0 auto;
+    width: 100px;
+}
+
+.collumn .headline.hl4:after {
+    border-bottom: 1px solid #2f2f2f;
+    content: '';
+    display: block;
+    height: 10px;
+    margin: 0 auto;
+    width: 100px;
+}
+
+
+/* Custom table added */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+thead {
+    border-bottom: 1px solid #2f2f2f;
+    border-top: 1px solid #2f2f2f;
+    text-align: center;
+    text-transform: uppercase;
+}
+
+tr:nth-child(even) {
+    background-color: #f0ede7;
+}
+
+td {
+    padding: 10px 15px;
+}
+
+tbody td {
+    text-align: left;
+}
+
+
+/* and a button */
+
+.button {
+    background-color: #f9f7f1;
+    border: 1px solid #2f2f2f;
+    padding: 2px 9px;
+    text-align: center;
+    text-decoration: none;
+    transition: all 0.2s;
+}
+
+.button:hover {
+    background-color: #2f2f2f;
+    color: #f9f7f1;
+    cursor: pointer;
+}
+
+.button:active {
+    background-color: #2f2f2f;
+}
+
+.button:focus {
+    outline: 1px solid orange;
+}
+
+input.button:focus {
+    outline: 1px solid orange;
+}
+
+
+/* and a message box */
+
+.messagebox {
+    animation: fadeIn .5s;
+    background-color: #f9f7f1;
+    bottom: 10px;
+    border: 1px solid #2f2f2f;
+    display: none;
+    overflow: auto;
+    padding: 10px 15px 10px 15px;
+    position: fixed;
+    right: 10px;
+    width: 200px;
+    -webkit-animation: fadeIn .5s;
+}
+
+@-webkit-keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0)
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+        transform: scale(0)
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1)
+    }
+}
+
+.spacing {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    align-items: center;
+    display: block;
+}
